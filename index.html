@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme</title>
+
+    <!-- font-awesome -->
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+
+</head>
+
+<body onload="init()">
+
+    <header class="header flex space-between">
+        <h2 class="logo">MEME-ME</h2>
+        <nav class="nav-bar flex">
+            <h2>Gallery</h2>
+            <h2>Memes</h2>
+            <h2>About</h2>
+        </nav>
+    </header>
+
+
+    <div class="img-container flex wrap"></div>
+
+    <div class="editor-container flex hide center">
+        <div class="editor flex">
+            <div class="canvas-container">
+                <canvas id="myCanvas" height="500" width="500"></canvas>
+            </div>
+
+            <div class="tools">
+
+                <input class="input-txt" type="text" placeholder="Text..">
+
+                <button class="btn-add-text" onclick="onAddText()">Add Text</button>
+
+                <div class="text-section flex space-between">
+
+                    <div class="flex">
+                        <button onclick="onMoveText(1)" class="arrows">&#8650;</button>
+                        <button onclick="onMoveText(-1)" class="arrows">&#8648;</button>
+                    </div>
+
+                    <button onclick="onChangeCurrText()" class="arrows">&#8645;</button>
+
+                    <div class="flex">
+                        <button class="btn-editor" onclick="onChangeFontSize(-1)">A-</button>
+                        <p class="font-size-value "></p>
+                        <button class="btn-editor" onclick="onChangeFontSize(1)">A+</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+
+    </footer>
+
+    <script src="js/meme-storage.js"></script>
+    <script src="js/meme-service.js"></script>
+    <script src="js/meme-controller.js"></script>
+</body>
+
+</html>

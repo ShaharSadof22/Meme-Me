@@ -1,0 +1,102 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    background-color: rgba(128, 128, 128, 0.356);
+    margin:0;
+}
+
+@font-face {
+    font-family: impact;
+    src: url(/font/impact.ttf);
+  }
+
+
+
+/* HELPERS */
+.flex{
+    display: flex;
+}
+.space-between{
+    justify-content: space-between;
+}
+.wrap{
+    flex-wrap: wrap;
+}
+.center{
+    justify-content: center;
+}
+.hide{
+    display: none;
+}
+
+
+/* COMPONENTS */
+
+/* HOME */
+
+.header{
+    background-color: #5F5F5F;
+    color: white;
+}
+.logo{
+    margin-left: 20px;
+}
+.nav-bar h2{
+    margin-right: 20px;
+    cursor: pointer;
+}
+.img-container{
+    max-width: 1060px;
+    margin: 5% auto;
+    padding: 0 5px;
+}
+.img-card{
+    width: 22%;
+    margin: 0 2% 1% 0;
+    border-style: ridge;
+    cursor: pointer;
+}
+
+/* EDITOR */
+
+.editor-container{
+    max-width: 1060px;
+    height: 600px;
+    margin: 5% auto;
+    padding: 0 5px;
+    background-color: #b6b3b3;
+}
+/* .editor{
+        
+} */
+.tools{
+    width:300px;
+    margin: 20px;
+}
+.canvas-container{
+    height: 502px;
+    margin: 20px auto;
+    border: 1px solid ;
+}
+.btn-editor{
+    width:50px;
+    height: 30px;
+    font-size: 23PX;
+}
+.input-txt{
+    width:300px;
+    height:40px;
+}
+.font-size-value{
+    margin: auto 10px;
+    font-weight: bold;
+}
+.text-section{
+    font-size: 22PX;
+    padding:6px;
+    background-color: rgb(146, 146, 146);
+}
+.arrows{
+    font-size:21px
+}
