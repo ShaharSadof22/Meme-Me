@@ -6,10 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meme</title>
-
-    <!-- font-awesome -->
-    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-
 </head>
 
 <body onload="init()">
@@ -17,12 +13,26 @@
     <header class="header flex space-between">
         <h2 class="logo">MEME-ME</h2>
         <nav class="nav-bar flex">
-            <h2>Gallery</h2>
-            <h2>Memes</h2>
-            <h2>About</h2>
+            <h2 onclick="onShowGalleryPage()">Gallery</h2>
+            <h2 onclick="onShowEditorPage()">Memes</h2>
+            <h2 onclick="onSetSavedMemesPage()">Saved</h2>
+            <h2 onclick="onSetAboutPage()">About</h2>
         </nav>
+        <div class="mobile-menu-btn hide" onclick="toggleMenu()">&#8779;</div>
     </header>
 
+    <div class="empty" onclick="toggleMenu()"></div>
+
+    <div class="about hide"></div>
+    <div class="exit-about hide" onclick="onExitAbout()"></div>
+
+    <div class="saved hide flex column">
+        <div class="edit-saved-meme flex center">
+            <button onclick="onDeleteMeme()">Delete</button>
+            <button onclick="onDoneDeleteMeme()">Done</button>
+        </div>
+        <div class="saved-meme-container flex wrap "></div>
+    </div>
 
     <div class="img-container flex wrap"></div>
 
@@ -36,23 +46,36 @@
 
                 <input class="input-txt" type="text" placeholder="Text..">
 
-                <button class="btn-add-text" onclick="onAddText()">Add Text</button>
+                <button class="btn-add-text big-btn" onclick="onAddText()">Add Text</button>
 
-                <div class="text-section flex space-between">
+                <div class="text-section flex column">
+                    <div class="flex space-between">
+                        <div class="arrows flex wrap">
+                            <button onclick="onMoveText(1)" class="arrow">&#8650;</button>
+                            <button onclick="onMoveText(-1)" class="arrow">&#8648;</button>
+                            <button onclick="onMoveText(-2)" class="arrow">&#8647;</button>
+                            <button onclick="onMoveText(2)" class="arrow">&#8649;</button>
+                        </div>
 
-                    <div class="flex">
-                        <button onclick="onMoveText(1)" class="arrows">&#8650;</button>
-                        <button onclick="onMoveText(-1)" class="arrows">&#8648;</button>
+                        <button onclick="onChangeCurrText()" class="arrow">&#8645;</button>
+
+                        <div class="flex">
+                            <button class="btn-editor" onclick="onChangeFontSize(-1)">A-</button>
+                            <p class="font-size-value "></p>
+                            <button class="btn-editor" onclick="onChangeFontSize(1)">A+</button>
+                        </div>
                     </div>
-
-                    <button onclick="onChangeCurrText()" class="arrows">&#8645;</button>
-
-                    <div class="flex">
-                        <button class="btn-editor" onclick="onChangeFontSize(-1)">A-</button>
-                        <p class="font-size-value "></p>
-                        <button class="btn-editor" onclick="onChangeFontSize(1)">A+</button>
+                    <div class="btn-done-color flex space-between">
+                        <button class="btn-done-edit" onclick="onDoneEdit()">Done</button>
+                        <input class="color-input" type="color" value="#ff0000" onchange="onChangeColor()">
                     </div>
                 </div>
+
+                <button class="btn-save big-btn" onclick="onSave()">Save</button>
+
+                <a href="#" download="my-img.jpg" onclick="onDownload(this)"><button
+                        class="btn-download big-btn">Download</button></a>
+
 
             </div>
         </div>

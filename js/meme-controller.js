@@ -3,39 +3,101 @@
 const gCanvas = document.getElementById('myCanvas');
 const gCtx = gCanvas.getContext('2d');
 const elInput = document.querySelector('.input-txt');
+var isDeleteMeme = false;
 
 elInput.addEventListener('input', updateText); //new text input
 
+
 function init() {
+    findScreenXidth();
     initService();
     _renderImgs();
+}
+
+function findScreenXidth() {
+    console.log("findScreenXidth -> screen.width", window.innerWidth)
+    if (window.innerWidth < 620) {
+        document.getElementById("myCanvas").style.height = "300px";
+        document.getElementById("myCanvas").style.width = "300px";
+    }
 }
 
 function _renderImgs() {
     let strHTML = '';
 
-    strHTML = gImgs.map(img => `<img src="${img.url}" alt="Image" class="img-card" onclick="setEditorPage(${img.id})">`);
+    strHTML = gImgs.map(img => `<img src="${img.url}" alt="Image" class="img-card" onclick="onShowEditorPage(${img.id}, ${true})">`);
 
-    document.querySelector('.img-container').innerHTML = strHTML;
+    document.querySelector('.img-container').innerHTML = strHTML.join('');
 
 }
 
 function _renderCanvas() {
-
     let imgId = getImgId();
     let img = new Image();
     img.src = `./img/${imgId}.jpg`;
     img.onload = () => {
-        gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height)
+        gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height);
         _drawInput();
     }
 }
 
-function setEditorPage(imgId) {
-    document.querySelector('.img-container').classList.add('hide');
-    document.querySelector('.editor-container').classList.remove('hide');
-    updateCurrMeme(imgId);
+// nav-bar
+
+function onShowEditorPage(imgId = getCurrImgId(), isNeedToDeleteText = false) {
+    if (imgId < 1) imgId = 1;
+
+    showEditPage();
+
+    if (isNeedToDeleteText) deleteTextFromEditorModel();
+
+    if (!getIsLoadedFromSaved()) updateCurrMeme(imgId);
+
     _renderCanvas(imgId);
+}
+
+function showEditPage() {
+    document.querySelector('.img-container').classList.add('hide');
+    document.querySelector('.saved').classList.add('hide');
+    document.querySelector('.editor-container').classList.remove('hide');
+}
+
+
+function onShowGalleryPage() {
+    document.querySelector('.img-container').classList.remove('hide');
+    document.querySelector('.editor-container').classList.add('hide');
+    document.querySelector('.saved').classList.add('hide');
+}
+
+function onSetAboutPage() {
+    var strHTML = `
+    <h2>This Meme generator made by Shahar Sadof</h2>
+    <h3>About this website - What is the Meme Generator?</h3>
+    <p>It's a free online image maker that allows you to add custom resizable text to images. It operates in HTML5 canvas, so your images are created instantly on your own device. Most commonly, people use the generator to add text captions to established memes, so technically it's more of a meme "captioner" than a meme maker. However, you can also upload your own images as templates.</p>
+    `
+    document.querySelector('.about').classList.remove('hide');
+    document.querySelector('.exit-about').classList.remove('hide');
+    document.querySelector('.about').innerHTML = strHTML;
+
+}
+
+function onExitAbout() {
+    document.querySelector('.about').classList.add('hide');
+    document.querySelector('.exit-about').classList.add('hide');
+}
+
+function onSetSavedMemesPage() {
+    let strHTML = '';
+    var savedMemes = getSavedMemes();
+
+    savedMemes.forEach((Meme, index) => {
+        strHTML += `<img src="./img/${Meme.selectedImgId}.jpg" alt="Image" class="img-card" onclick="onLoadFromSaved(${index})">`
+    });
+
+    document.querySelector('.saved-meme-container').innerHTML = strHTML;
+    document.querySelector('.saved').classList.remove('hide');
+
+    document.querySelector('.img-container').classList.add('hide');
+    document.querySelector('.editor-container').classList.add('hide');
 }
 
 function drawImg() {
@@ -60,17 +122,12 @@ function _drawText(lineIdx) {
 
 function _drawRect(lineIdx) {
     let currLine = gMeme.lines[lineIdx];
+
     gCtx.beginPath();
-    gCtx.rect(0, currLine.yPos - 50, 500, 50);
+    gCtx.lineWidth = "1";
+    gCtx.rect(0, currLine.yPos - currLine.size, 500, currLine.size);
     gCtx.strokeStyle = 'black';
     gCtx.stroke();
-
-    var my_gradient = gCtx.createLinearGradient(0, 0, 170, 0);
-    my_gradient.addColorStop(0, "black");
-    my_gradient.addColorStop(1, "white");
-    gCtx.fillStyle = my_gradient;
-
-    gCtx.fillRect(0, currLine.yPos - 50, 500, 50);
 }
 
 function updateText(ev) {
@@ -88,13 +145,14 @@ function _drawInput() {
     _renderFontSize();
     let numOfLine = getNumOfLine();
     for (let i = 0; i < numOfLine; i++) {
-        if (!getIsFirstClick() && i === numOfLine - 1) _drawRect(i);
+        if ((!getIsFirstClick() && i === numOfLine - 1) ||
+            (getIsEdit() && i === getCurrLine())) _drawRect(i);
         _drawText(i);
     }
 }
 
 function onChangeFontSize(val) {
-    if(!getNumOfLine()) return;
+    if (!getNumOfLine()) return;
     setFontSizeModel(val);
     _renderFontSize();
     _renderCanvas();
@@ -105,7 +163,7 @@ function _renderFontSize() {
 }
 
 function onMoveText(val) {
-    if(!getNumOfLine()) return;
+    if (!getNumOfLine()) return;
     setMoveText(val);
     _renderCanvas();
 }
@@ -119,7 +177,57 @@ function onAddText() {
 }
 
 function onChangeCurrText() {
-    // debugger;
+    setIsEdit(true);
     setSelectedLineIdx(-1);
-    _renderFontSize();
+    _renderCanvas();
+}
+
+function onSave() {
+    addToSaveMemes();
+}
+
+function onDownload(elLink) {
+    let data = gCanvas.toDataURL();
+    elLink.href = data;
+}
+
+function onDoneEdit() {
+    setIsEdit(false);
+    _renderCanvas();
+}
+
+function onLoadFromSaved(index) {
+    // debugger
+    if (isDeleteMeme) {
+        deleteMeme(index);
+        onSetSavedMemesPage();
+        return;
+    };
+
+    let MemeMemomry = getMemeMemomry(index);
+    setIsLoadedFromSaved(true);
+    onShowEditorPage(undefined, true);
+    updateMeme(MemeMemomry);
+    _renderCanvas();
+}
+
+function onDeleteMeme() {
+    document.querySelector('.saved').classList.add('red');
+    isDeleteMeme = true;
+}
+
+function onDoneDeleteMeme() {
+    document.querySelector('.saved').classList.remove('red');
+    isDeleteMeme = false;
+}
+
+function onChangeColor() {
+    let newColor = document.querySelector('.color-input').value;
+    setNewColor(newColor);
+    _renderCanvas();
+}
+
+function toggleMenu() {
+    document.querySelector('.nav-bar').classList.toggle('nav-bar-open');
+    document.querySelector('.empty').classList.toggle('empty-open');
 }

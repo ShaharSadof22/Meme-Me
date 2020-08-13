@@ -26,8 +26,14 @@ body{
 .center{
     justify-content: center;
 }
+.column{
+    flex-direction: column;
+}
 .hide{
     display: none;
+}
+.red{
+    background-color: #530000db;
 }
 
 
@@ -38,22 +44,28 @@ body{
 .header{
     background-color: #5F5F5F;
     color: white;
+    box-shadow: 0px 2px black;
 }
 .logo{
     margin-left: 20px;
 }
-.nav-bar h2{
+.nav-bar h2 {
     margin-right: 20px;
+    margin-left: 21px;
     cursor: pointer;
+}
+.nav-bar h2:hover{
+    color: rgb(196, 0, 0);
+    box-shadow: 0 2px rgb(196, 0, 0);
 }
 .img-container{
     max-width: 1060px;
     margin: 5% auto;
     padding: 0 5px;
 }
-.img-card{
-    width: 22%;
-    margin: 0 2% 1% 0;
+.img-card {
+    width: 23%;
+    margin: 0 1% 1% 1%;
     border-style: ridge;
     cursor: pointer;
 }
@@ -67,9 +79,7 @@ body{
     padding: 0 5px;
     background-color: #b6b3b3;
 }
-/* .editor{
-        
-} */
+
 .tools{
     width:300px;
     margin: 20px;
@@ -88,8 +98,12 @@ body{
     width:300px;
     height:40px;
 }
+.big-btn{
+    width:100%;
+    height:30px;
+}
 .font-size-value{
-    margin: auto 10px;
+    margin: 2px 10px;
     font-weight: bold;
 }
 .text-section{
@@ -97,6 +111,112 @@ body{
     padding:6px;
     background-color: rgb(146, 146, 146);
 }
+.arrow{
+    font-size:21px;
+    height: 30px;
+    width: 34px;
+}
 .arrows{
-    font-size:21px
+    width: 68px;
+}
+.tools button:hover{
+    background-color: rgb(122, 122, 122);
+}
+.btn-done-edit {
+    width: 50%;
+    height: 29px;
+}
+.btn-done-color{
+    height: 30px;
+    margin-top: 8px;
+}
+.about{
+    position: absolute;
+    left: 20%;
+    margin: 10% auto;
+    width: 60%;
+    background-color: #FFFFFF;
+    border: 1px solid;
+    text-align: center;
+    z-index: 2;
+    padding:4%;
+}
+.exit-about {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(95, 63, 63, 0.445);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+}
+.saved-meme-container{
+    max-width: 1060px;
+    margin: auto;
+    padding: 0 5px;
+}
+.edit-saved-meme {
+    margin: 35px 0 20px;
+}
+.edit-saved-meme button {
+    width: 90px;
+    height: 30px;
+}
+
+@media (max-width: 1100px){
+    .editor-container{
+        width: 100%;
+        height: 100%;
+    }
+    .editor {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Mobile */
+
+.mobile-menu-btn {
+    font-size: 55px;
+    height: 60px;
+    width: 81px;
+    text-align: center;
+    margin-top: 0px;
+    cursor: pointer;
+}
+
+
+@media (max-width: 620px){
+    .nav-bar{
+        display: none;
+    }
+    .mobile-menu-btn{
+        display:block;
+    }
+    .nav-bar-open {
+        position: fixed;
+        display: block;
+        flex-direction: column;
+        background-color: #4f0000f0;
+        position: fixed;
+        right: 0;
+        height: 100%;
+        width: 230px;
+        font-size: 1.2rem;
+        z-index: 2;
+    }
+    .empty-open {
+        visibility: visible;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100vw;
+        height: 200vh;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .canvas-container{
+        height: 302px;
+        
+    }
 }
