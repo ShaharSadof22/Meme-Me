@@ -4,6 +4,7 @@ const gCanvas = document.getElementById('myCanvas');
 const gCtx = gCanvas.getContext('2d');
 const elInput = document.querySelector('.input-txt');
 var isDeleteMeme = false;
+var currPage = 'header-gallery';
 
 elInput.addEventListener('input', updateText); //new text input
 
@@ -15,7 +16,6 @@ function init() {
 }
 
 function findScreenXidth() {
-    console.log("findScreenXidth -> screen.width", window.innerWidth)
     if (window.innerWidth < 620) {
         document.getElementById("myCanvas").style.height = "300px";
         document.getElementById("myCanvas").style.width = "300px";
@@ -44,6 +44,8 @@ function _renderCanvas() {
 // nav-bar
 
 function onShowEditorPage(imgId = getCurrImgId(), isNeedToDeleteText = false) {
+    setCurrPage('header-memes');
+
     if (imgId < 1) imgId = 1;
 
     showEditPage();
@@ -63,12 +65,14 @@ function showEditPage() {
 
 
 function onShowGalleryPage() {
+    setCurrPage('header-gallery');
     document.querySelector('.img-container').classList.remove('hide');
     document.querySelector('.editor-container').classList.add('hide');
     document.querySelector('.saved').classList.add('hide');
 }
 
 function onSetAboutPage() {
+    setCurrPage('header-about');
     var strHTML = `
     <h2>This Meme generator made by Shahar Sadof</h2>
     <h3>About this website - What is the Meme Generator?</h3>
@@ -86,12 +90,15 @@ function onExitAbout() {
 }
 
 function onSetSavedMemesPage() {
+    setCurrPage('header-saved');
     let strHTML = '';
     var savedMemes = getSavedMemes();
 
-    savedMemes.forEach((Meme, index) => {
-        strHTML += `<img src="./img/${Meme.selectedImgId}.jpg" alt="Image" class="img-card" onclick="onLoadFromSaved(${index})">`
-    });
+    if (savedMemes.length > 0) {
+        savedMemes.forEach((Meme, index) => {
+            strHTML += `<img src="./img/${Meme.selectedImgId}.jpg" alt="Image" class="img-card" onclick="onLoadFromSaved(${index})">`
+        });
+    }
 
     document.querySelector('.saved-meme-container').innerHTML = strHTML;
     document.querySelector('.saved').classList.remove('hide');
@@ -114,7 +121,7 @@ function _drawText(lineIdx) {
     gCtx.lineWidth = '1';
     gCtx.strokeStyle = 'black';
     gCtx.fillStyle = currLine.color;
-    gCtx.font = `${currLine.size}px Impact`;
+    gCtx.font = `${currLine.size}px ${currLine.font}`;
     gCtx.textAlign = 'center';
     gCtx.fillText(currLine.txt, currLine.xPos, currLine.yPos);
     gCtx.strokeText(currLine.txt, currLine.xPos, currLine.yPos);
@@ -230,4 +237,17 @@ function onChangeColor() {
 function toggleMenu() {
     document.querySelector('.nav-bar').classList.toggle('nav-bar-open');
     document.querySelector('.empty').classList.toggle('empty-open');
+}
+
+function onChangeFont() {
+    var newFont = document.querySelector('.font-select').value;
+    setFontToModel(newFont);
+    _renderCanvas();
+}
+
+function setCurrPage(nextPage) {
+    
+    document.querySelector('.' + currPage).classList.remove('black-font');
+    document.querySelector('.' + nextPage).classList.add('black-font');
+    currPage = nextPage;
 }

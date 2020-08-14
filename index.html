@@ -13,10 +13,10 @@
     <header class="header flex space-between">
         <h2 class="logo">MEME-ME</h2>
         <nav class="nav-bar flex">
-            <h2 onclick="onShowGalleryPage()">Gallery</h2>
-            <h2 onclick="onShowEditorPage()">Memes</h2>
-            <h2 onclick="onSetSavedMemesPage()">Saved</h2>
-            <h2 onclick="onSetAboutPage()">About</h2>
+            <h2 onclick="onShowGalleryPage()" class="header-gallery black-font">Gallery</h2>
+            <h2 onclick="onShowEditorPage()" class="header-memes">Memes</h2>
+            <h2 onclick="onSetSavedMemesPage()" class="header-saved">Saved</h2>
+            <h2 onclick="onSetAboutPage()" class="header-about">About</h2>
         </nav>
         <div class="mobile-menu-btn hide" onclick="toggleMenu()">&#8779;</div>
     </header>
@@ -28,15 +28,15 @@
 
     <div class="saved hide flex column">
         <div class="edit-saved-meme flex center">
-            <button onclick="onDeleteMeme()">Delete</button>
-            <button onclick="onDoneDeleteMeme()">Done</button>
+            <button onclick="onDeleteMeme()" class="big-btn-style">Delete</button>
+            <button onclick="onDoneDeleteMeme()" class="big-btn-style">Done</button>
         </div>
-        <div class="saved-meme-container flex wrap "></div>
+        <div class="saved-meme-container container flex wrap "></div>
     </div>
 
-    <div class="img-container flex wrap"></div>
+    <div class="img-container container flex wrap"></div>
 
-    <div class="editor-container flex hide center">
+    <div class="editor-container container flex hide center">
         <div class="editor flex">
             <div class="canvas-container">
                 <canvas id="myCanvas" height="500" width="500"></canvas>
@@ -46,7 +46,7 @@
 
                 <input class="input-txt" type="text" placeholder="Text..">
 
-                <button class="btn-add-text big-btn" onclick="onAddText()">Add Text</button>
+                <button class="btn-add-text big-btn big-btn-style" onclick="onAddText()">Add Text</button>
 
                 <div class="text-section flex column">
                     <div class="flex space-between">
@@ -67,14 +67,23 @@
                     </div>
                     <div class="btn-done-color flex space-between">
                         <button class="btn-done-edit" onclick="onDoneEdit()">Done</button>
-                        <input class="color-input" type="color" value="#ff0000" onchange="onChangeColor()">
+                        <div class="color-font flex column">
+                            <input class="color-input" type="color" value="#ff0000" onchange="onChangeColor()">
+
+                            <select class="font-select" onchange="onChangeFont()">
+                                <option value="impact">Impact</option>
+                                <option value="Ariel">Ariel</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+
+                        </div>
                     </div>
                 </div>
 
-                <button class="btn-save big-btn" onclick="onSave()">Save</button>
+                <button class="btn-save big-btn big-btn-style" onclick="onSave()">Save</button>
 
                 <a href="#" download="my-img.jpg" onclick="onDownload(this)"><button
-                        class="btn-download big-btn">Download</button></a>
+                        class="btn-download big-btn big-btn-style">Download</button></a>
 
 
             </div>

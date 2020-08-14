@@ -66,7 +66,8 @@ function addNewLineModel() {
         align: 'center',
         color: 'black',
         yPos: 80,
-        xPos: 200
+        xPos: 200,
+        font: 'Impact',
     })
 }
 
@@ -136,4 +137,8 @@ function deleteMeme(index) {
 
 function setNewColor(newColor) {
     gMeme.lines[getCurrLine()].color = newColor;
+}
+
+function setFontToModel(newFont) {
+    gMeme.lines[getCurrLine()].font = newFont;
 }
