@@ -13,6 +13,7 @@ function init() {
     findScreenXidth();
     initService();
     _renderImgs();
+    _renderTags();
 }
 
 function findScreenXidth() {
@@ -22,19 +23,55 @@ function findScreenXidth() {
     }
 }
 
-function _renderImgs() {
-    let strHTML = '';
+function _renderImgs(key = false) {
+    let strHTML = [];
 
-    strHTML = gImgs.map(img => `<img src="${img.url}" alt="Image" class="img-card" onclick="onShowEditorPage(${img.id}, ${true})">`);
+    if (key) {
+        strHTML = gImgs.map(img => {
+            if (img.keywords.includes(key)) {
+                return `<img src="${img.url}" alt="Image" class="img-card" onclick="onShowEditorPage(${img.id}, ${true})">`;
+            }
+        })
+    } else {
+        strHTML = gImgs.map(img => `<img src="${img.url}" alt="Image" class="img-card" onclick="onShowEditorPage(${img.id}, ${true})">`
+        );
+    }
 
     document.querySelector('.img-container').innerHTML = strHTML.join('');
+}
 
+function _renderTags() {
+    let strHTML = [];
+
+    const keywords = Object.keys(gKeywords);
+
+    keywords.forEach(key => {
+        strHTML.push(`<h3 class="tag ${key}-tag" onclick="onSearchTag('${key}')">${key}</h3>`);
+    })
+    document.querySelector('.tags-container').innerHTML = strHTML.join('');
+}
+
+function onSearchTag(key) {
+    updateKeywordsModel(key);
+    _renderImgs(key);
+    const firstFontSize = 18;
+    document.querySelector(`.${key}-tag`).style.fontSize = `${firstFontSize + gKeywords[key]}px`;
 }
 
 function _renderCanvas() {
-    let imgId = getImgId();
+
+    const imgId = getImgId();
     let img = new Image();
-    img.src = `./img/${imgId}.jpg`;
+
+    if (imgId > IMG_COUNT) { // rendering img from pc
+        clearCanvas();
+        setGmemeToLoadedFile(imgId);
+        img.src = getSrcOfLoadedImg(imgId);
+    } else {
+        img.src = `./img/${imgId}.jpg`;
+    }
+
+
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height);
         _drawInput();
@@ -45,6 +82,8 @@ function _renderCanvas() {
 
 function onShowEditorPage(imgId = getCurrImgId(), isNeedToDeleteText = false) {
     setCurrPage('header-memes');
+    elInput.value = '';
+    setLineIdxToZero();
 
     if (imgId < 1) imgId = 1;
 
@@ -54,18 +93,21 @@ function onShowEditorPage(imgId = getCurrImgId(), isNeedToDeleteText = false) {
 
     if (!getIsLoadedFromSaved()) updateCurrMeme(imgId);
 
-    _renderCanvas(imgId);
+    _renderCanvas();
 }
 
 function showEditPage() {
     document.querySelector('.img-container').classList.add('hide');
+    document.querySelector('.control-gallery').classList.add('hide');
     document.querySelector('.saved').classList.add('hide');
     document.querySelector('.editor-container').classList.remove('hide');
 }
 
 
+
 function onShowGalleryPage() {
     setCurrPage('header-gallery');
+    document.querySelector('.control-gallery').classList.remove('hide');
     document.querySelector('.img-container').classList.remove('hide');
     document.querySelector('.editor-container').classList.add('hide');
     document.querySelector('.saved').classList.add('hide');
@@ -90,13 +132,20 @@ function onExitAbout() {
 }
 
 function onSetSavedMemesPage() {
+
     setCurrPage('header-saved');
     let strHTML = '';
     var savedMemes = getSavedMemes();
 
-    if (savedMemes.length > 0) {
+    if (savedMemes) {
         savedMemes.forEach((Meme, index) => {
-            strHTML += `<img src="./img/${Meme.selectedImgId}.jpg" alt="Image" class="img-card" onclick="onLoadFromSaved(${index})">`
+            console.log("onSetSavedMemesPage -> Meme", Meme)
+            if (Meme.isLoadedFromPC) {
+                const imgSrc = getSrcOfLoadedImg(Meme.selectedImgId);
+                strHTML += `<img src="${imgSrc}.jpg" alt="Image" class="img-card" onclick="onLoadFromSaved(${index})">`
+            } else {
+                strHTML += `<img src="./img/${Meme.selectedImgId}.jpg" alt="Image" class="img-card" onclick="onLoadFromSaved(${index})">`
+            }
         });
     }
 
@@ -105,6 +154,7 @@ function onSetSavedMemesPage() {
 
     document.querySelector('.img-container').classList.add('hide');
     document.querySelector('.editor-container').classList.add('hide');
+    document.querySelector('.control-gallery').classList.add('hide');
 }
 
 function drawImg() {
@@ -138,7 +188,9 @@ function _drawRect(lineIdx) {
 }
 
 function updateText(ev) {
+    // debugger
     let text = ev.target.value;
+
     if (text.length > 0 && getIsFirstClick()) {
         addNewLineModel();
         setSelectedLineIdx(1);
@@ -186,10 +238,16 @@ function onAddText() {
 function onChangeCurrText() {
     setIsEdit(true);
     setSelectedLineIdx(-1);
+    addTextToInput();
     _renderCanvas();
 }
 
+function addTextToInput() {
+    elInput.value = getCurrText();
+}
+
 function onSave() {
+    if (getIsLoadedFromPC()) return;
     addToSaveMemes();
 }
 
@@ -246,8 +304,36 @@ function onChangeFont() {
 }
 
 function setCurrPage(nextPage) {
-    
+
     document.querySelector('.' + currPage).classList.remove('black-font');
     document.querySelector('.' + nextPage).classList.add('black-font');
     currPage = nextPage;
+}
+
+function onDeleteText() {
+    deleteCurrLine();
+    setSelectedLineIdx(-1);
+    elInput.value = '';
+    _renderCanvas();
+}
+
+function onUploadImg(ev) {
+    addImgToModel(URL.createObjectURL(ev.target.files[0]));
+    _renderImgs();
+}
+
+// function onUploadImg(ev) {
+//     var img = new Image();
+//     img.onload = draw;
+//     img.src = URL.createObjectURL(ev.target.files[0]);
+//     console.log("onUploadImg -> img.src", img.src)
+//   };
+//   function draw() {
+//     gCanvas.width = this.width;
+//     gCanvas.height = this.height;
+//     gCtx.drawImage(this, 0,0);
+//   }
+
+function clearCanvas() {
+    gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
 }

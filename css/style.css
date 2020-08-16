@@ -16,6 +16,9 @@ body{
 .space-between{
     justify-content: space-between;
 }
+.space-evenly{
+    justify-content: space-evenly;
+}
 .wrap{
     flex-wrap: wrap;
 }
@@ -32,7 +35,7 @@ body{
     background-color: #530000db;
 }
 .container{
-    margin: 5% auto;
+    margin: 2% auto;
     padding: 4% 4% 20%;
     background-color: rgba(128, 128, 128, 0.89);
     border-radius: 40px;
@@ -73,12 +76,39 @@ body{
     border-style: ridge;
     cursor: pointer;
 }
+.tags-container{
+    margin: 2% auto 0;
+    width: 40%;
+    box-shadow: 0px 0px 0px 1px black;
+    border-radius: 20px;
+    color:white;
+    background-color: #EF9620;
+}
+.tag{
+    cursor: pointer;
+}
+.tag:hover{
+    color:black;
+}
+.control-gallery{
+    max-width: 1060px;
+    margin: auto;
+}
+.uploaded-image-form{
+    margin: 4% auto 0;
+    background-color: #EF9620;
+    color: white;
+    border-radius: 20px;
+    box-shadow: 0px 0px 0px 1px black;
+    padding: 11px;
+}
 
 /* EDITOR */
 
 .editor-container{
     max-width: 1060px;
     height: 600px;
+    padding: 20px;
 }
 
 .tools{
@@ -89,6 +119,9 @@ body{
     height: 502px;
     margin: 20px auto;
     border: 1px solid ;
+}
+.tools button{
+    cursor: pointer;
 }
 .btn-editor{
     width:50px;
@@ -129,6 +162,14 @@ button:focus {
     height: 30px;
     width: 34px;
 }
+.delete-btn{
+    font-size:40px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.delete-btn:hover{
+    color: #9b3f3f;
+}
 .arrows{
     width: 68px;
 }
@@ -136,9 +177,9 @@ button:focus {
     background-color: rgb(122, 122, 122);
 }
 .btn-done-edit {
-    width: 50%;
+    width: 140px;
     height: 29px;
-    margin-top: 9px;
+    margin-top: 12px;
 }
 .btn-done-color {
     height: 50px;
@@ -147,8 +188,12 @@ button:focus {
 .color-font{
     align-items: center;
 }
+.color-input{
+    cursor: pointer;
+}
 .font-select{
     margin-top: 6px;
+    cursor: pointer;
 }
 .about{
     position: absolute;
@@ -186,6 +231,7 @@ button:focus {
     height: 30px;
 }
 
+
 /* Tablet */
 
 @media (max-width: 1100px){
@@ -200,6 +246,15 @@ button:focus {
     .saved-meme-container{
         width: 100%;
         margin: 0% auto;
+    }
+    .tags-container{
+        width: 65%;
+    }
+    .control-gallery{
+        flex-direction: column;
+    }
+    .uploaded-image-form{
+        margin-top: 10px;
     }
 }
 
@@ -249,7 +304,10 @@ button:focus {
     }
     .canvas-container{
         height: 302px;
-        
     }
+    .tags-container{
+        width: 100%;
+    }
+    
 }
 
