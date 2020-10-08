@@ -6,4 +6,4 @@ However, you can also upload your own images as templates.
 
 This project build with Vanila javascript HTML and CSS.
 
-Try it now! - https://shaharsadof22.github.io/meme-generator/
+Try it now! - https://shaharsadof22.github.io/Meme-Me/
